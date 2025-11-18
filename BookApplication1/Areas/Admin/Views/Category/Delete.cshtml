@@ -1,0 +1,46 @@
+﻿@model Category
+
+@{
+    ViewData["Title"] = "Delete Category";
+}
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Delete Category</h2>
+        <a asp-controller="Category" asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-action="Delete" method="post" asp-route-id="@Model.Id">
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label fw-semibold"></label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter category name" disabled/>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DisplayOrder" class="form-label fw-semibold"></label>
+                    <input asp-for="DisplayOrder" class="form-control" placeholder="Enter display order" disabled/>
+                    <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-dark btn-md">
+                    <i class="bi bi-check-circle me-2"></i> Delete
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

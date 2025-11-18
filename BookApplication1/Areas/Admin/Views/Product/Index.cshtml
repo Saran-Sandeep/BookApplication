@@ -1,0 +1,178 @@
+﻿@model List<Product>
+
+@{
+    ViewData["Title"] = "Browse Books";
+}
+
+<style>
+
+    /* 2. Sharp, Flat Cards */
+    .card-lux {
+        background: #fff;
+        border: 1px solid #e0e0e0; /* distinct border */
+        border-radius: 0 !important; /* SHARP EDGES */
+        transition: all 0.2s ease-in-out;
+    }
+
+        .card-lux:hover {
+            border-color: #000; /* Highlight with black border on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+    /* 3. Admin Buttons: Square and Sharp */
+    .admin-actions-container {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 10;
+        display: flex;
+    }
+
+    .btn-admin-square {
+        width: 35px;
+        height: 35px;
+        border-radius: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    .card-lux:hover .btn-admin-square {
+        opacity: 1;
+    }
+
+    /* 4. Typography & Layout */
+    .tracking-wide {
+        letter-spacing: 2px;
+    }
+
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .book-cover-placeholder {
+        height: 240px;
+        background: #f0f0f0; /* Flat gray, no gradient */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #000;
+        position: relative;
+        border-bottom: 1px solid #e0e0e0;
+    }
+</style>
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-end mb-5 border-bottom pb-3">
+        <div>
+            <h2 class="text-uppercase tracking-wide mb-0">Library</h2>
+            <small class="text-muted text-uppercase" style="letter-spacing: 1px;">Collection 2024</small>
+        </div>
+        <a asp-controller="Product" asp-action="Create" class="btn btn-primary rounded-0 text-uppercase" style="font-size: 0.8rem;">
+            <i class="bi bi-plus-lg me-2"></i>Add Product
+        </a>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <form asp-action="Index" method="get">
+                <div class="input-group">
+                    <input class="form-control rounded-0 border-secondary" name="search" placeholder="SEARCH TITLE OR AUTHOR..." style="background:#fff;" />
+                    <button class="btn btn-dark rounded-0 px-4 text-uppercase" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var p in Model.OrderBy(p => p.Name))
+        {
+            var inStock = p.Quantity > 0;
+
+            /* Initials Logic */
+            var initials = "BK";
+            if (!string.IsNullOrWhiteSpace(p.Name))
+            {
+                var parts = p.Name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                initials = string.Concat(parts.Select(x => x[0])).ToUpper();
+                if (initials.Length > 2) initials = initials.Substring(0, 2);
+            }
+
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex align-items-stretch">
+
+                <div class="card card-lux h-100 w-100 position-relative">
+
+                    <div class="admin-actions-container">
+                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@p.Id"
+                           class="btn btn-admin-square btn-dark text-white" title="Edit">
+                            <i class="bi bi-pencil-fill" style="font-size: 12px;"></i>
+                        </a>
+
+                        <form asp-controller="Product" asp-action="Delete" asp-route-id="@p.Id" method="post" onsubmit="return confirm('Delete this product?');">
+                            <button type="submit" class="btn btn-admin-square btn-danger text-white" title="Delete">
+                                <i class="bi bi-trash-fill" style="font-size: 12px;"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="book-cover-placeholder">
+                        <h1 class="display-4 fw-bold opacity-25 user-select-none mb-0" style="font-family: serif;">@initials</h1>
+                        <span class="small text-uppercase fw-bold opacity-50 tracking-wide">@p.Author</span>
+
+                        @if (!inStock)
+                        {
+                            <div class="position-absolute top-50 start-50 translate-middle w-100 bg-black text-white text-center text-uppercase py-2 opacity-75" style="letter-spacing:2px; font-size: 0.8rem;">
+                                Out of Stock
+                            </div>
+                        }
+                    </div>
+
+                    <div class="card-body d-flex flex-column p-4">
+
+                        <a asp-controller="Product" asp-action="Details" asp-route-id="@p.Id" class="text-decoration-none text-dark stretched-link">
+                            <h6 class="text-uppercase fw-bold mb-2 text-truncate" style="letter-spacing: 0.5px;">@p.Name</h6>
+                        </a>
+
+                        <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+                            <div class="text-warning small">
+                                @{
+                                    int r = Math.Clamp(p.Rating, 0, 5);
+                                    for (int i = 0; i < 5; i++)
+                                    {
+                                        <i class="bi @(i < r ? "bi-star-fill" : "bi-star text-muted opacity-25")"></i>
+                                    }
+                                }
+                            </div>
+                            <span class="text-muted small">@p.PublishedDate.Year</span>
+                        </div>
+
+                        <p class="text-muted small line-clamp-2 mb-4" style="font-family: serif;">
+                            @p.Description
+                        </p>
+
+                        <div class="mt-auto">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="fw-bold text-dark fs-5">₹@p.Price</span>
+
+                                <form asp-controller="Cart" asp-action="Add" asp-route-id="@p.Id" method="post" style="position:relative; z-index:2;">
+                                    <button type="submit" class="btn btn-sm @(inStock ? "btn-outline-dark" : "btn-outline-secondary disabled") rounded-0 text-uppercase fw-bold px-3">
+                                        @(inStock ? "Add To Cart" : "Sold")
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+</div>

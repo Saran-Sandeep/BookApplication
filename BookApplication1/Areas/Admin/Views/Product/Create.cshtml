@@ -1,0 +1,104 @@
+﻿@model Product
+
+@{
+    ViewData["Title"] = "Add New Product";
+}
+
+<div class="container mt-5">
+
+    <h2 class="mb-4 fw-bold text-uppercase border-bottom pb-2">Add New Product</h2>
+
+    <form asp-action="Create" method="post" class="row g-4">
+
+        <!-- Book Name -->
+        <div class="col-md-6">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <!-- Author Name -->
+        <div class="col-md-6">
+            <label asp-for="Author" class="form-label"></label>
+            <input asp-for="Author" class="form-control" />
+            <span asp-validation-for="Author" class="text-danger"></span>
+        </div>
+
+        <!-- Description -->
+        <div class="col-12">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <!-- Price -->
+        <div class="col-md-4">
+            <label asp-for="Price" class="form-label"></label>
+            <input asp-for="Price" type="number" step="0.01" class="form-control" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+
+        <!-- Stock Quantity -->
+        <div class="col-md-4">
+            <label asp-for="Quantity" class="form-label"></label>
+            <input asp-for="Quantity" type="number" class="form-control" />
+            <span asp-validation-for="Quantity" class="text-danger"></span>
+        </div>
+
+        <!-- Edition Number -->
+        <div class="col-md-4">
+            <label asp-for="EditionNum" class="form-label"></label>
+            <input asp-for="EditionNum" type="number" class="form-control" />
+            <span asp-validation-for="EditionNum" class="text-danger"></span>
+        </div>
+
+        <!-- Published Date (DateOnly) -->
+        <div class="col-md-4">
+            <label asp-for="PublishedDate" class="form-label"></label>
+            <input asp-for="PublishedDate" type="date" class="form-control" />
+
+            <span asp-validation-for="PublishedDate" class="text-danger"></span>
+        </div>
+
+        <!-- Rating -->
+        <div class="col-md-4">
+            <label asp-for="Rating" class="form-label"></label>
+            <input asp-for="Rating" type="number" min="1" max="5" class="form-control" />
+            <span asp-validation-for="Rating" class="text-danger"></span>
+        </div>
+
+        <!-- ISBN -->
+        <div class="col-md-4">
+            <label asp-for="ISBN" class="form-label"></label>
+            <input asp-for="ISBN" class="form-control" />
+            <span asp-validation-for="ISBN" class="text-danger"></span>
+        </div>
+
+        @* <!-- Created At -->
+        <div class="col-md-6">
+            <label asp-for="CreatedAt" class="form-label"></label>
+            <input asp-for="CreatedAt" type="date" class="form-control"
+                   value="@Model.CreatedAt.ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="CreatedAt" class="text-danger"></span>
+        </div>
+
+        <!-- Updated At -->
+        <div class="col-md-6">
+            <label asp-for="UpdatedAt" class="form-label"></label>
+            <input asp-for="UpdatedAt" type="date" class="form-control"
+                   value="@Model.UpdatedAt.ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="UpdatedAt" class="text-danger"></span>
+        </div> *@
+
+        <!-- Submit -->
+        <div class="col-12 mt-3">
+            <button type="submit" class="btn btn-primary px-4">Add Product</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
