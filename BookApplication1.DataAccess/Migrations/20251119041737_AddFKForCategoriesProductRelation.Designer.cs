@@ -4,16 +4,19 @@ using BookApplication1.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BookApplication1.Migrations
+namespace BookApplication1.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251119041737_AddFKForCategoriesProductRelation")]
+    partial class AddFKForCategoriesProductRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,10 +134,6 @@ namespace BookApplication1.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("ImageURL")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -171,7 +170,6 @@ namespace BookApplication1.Migrations
                             Description = "A thrilling sci-fi adventure across space and time.",
                             EditionNum = 2,
                             ISBN = "978-1-23456-789-7",
-                            ImageURL = "",
                             Name = "The Time Traveler",
                             Price = 499.99f,
                             PublishedDate = new DateOnly(2023, 5, 12),
@@ -188,7 +186,6 @@ namespace BookApplication1.Migrations
                             Description = "A gripping thriller filled with suspense and twists.",
                             EditionNum = 1,
                             ISBN = "978-1-98765-432-1",
-                            ImageURL = "",
                             Name = "Mystery of the Lost Manor",
                             Price = 299.5f,
                             PublishedDate = new DateOnly(2022, 11, 20),
@@ -205,7 +202,6 @@ namespace BookApplication1.Migrations
                             Description = "An epic sci-fi saga exploring distant galaxies.",
                             EditionNum = 3,
                             ISBN = "978-0-12345-678-9",
-                            ImageURL = "",
                             Name = "Galactic Frontiers",
                             Price = 599f,
                             PublishedDate = new DateOnly(2024, 1, 10),
@@ -222,7 +218,6 @@ namespace BookApplication1.Migrations
                             Description = "A dark fantasy adventure blending magic, mythology, and mystery.",
                             EditionNum = 1,
                             ISBN = "978-1-54321-987-6",
-                            ImageURL = "",
                             Name = "Shadows of the Forgotten Realm",
                             Price = 450f,
                             PublishedDate = new DateOnly(2021, 8, 17),
@@ -239,7 +234,6 @@ namespace BookApplication1.Migrations
                             Description = "A mind-bending story about alternate timelines and cosmic secrets.",
                             EditionNum = 2,
                             ISBN = "978-0-24680-135-7",
-                            ImageURL = "",
                             Name = "The Quantum Paradox",
                             Price = 650f,
                             PublishedDate = new DateOnly(2023, 3, 2),
@@ -256,7 +250,6 @@ namespace BookApplication1.Migrations
                             Description = "A samurai-inspired action novel full of honor, conflict, and redemption.",
                             EditionNum = 3,
                             ISBN = "978-1-67890-555-3",
-                            ImageURL = "",
                             Name = "Echoes of the Crimson Blade",
                             Price = 520.5f,
                             PublishedDate = new DateOnly(2020, 12, 5),
@@ -273,7 +266,6 @@ namespace BookApplication1.Migrations
                             Description = "A slow-burn mystery unraveling eerie clues in a quiet lakeside town.",
                             EditionNum = 1,
                             ISBN = "978-0-11223-445-8",
-                            ImageURL = "",
                             Name = "Beneath the Silver Lake",
                             Price = 310f,
                             PublishedDate = new DateOnly(2022, 4, 14),
@@ -290,7 +282,6 @@ namespace BookApplication1.Migrations
                             Description = "A futuristic action thriller set in a war-torn cyberpunk world.",
                             EditionNum = 2,
                             ISBN = "978-9-87654-320-4",
-                            ImageURL = "",
                             Name = "Rise of the Cyber Dominion",
                             Price = 799f,
                             PublishedDate = new DateOnly(2024, 2, 1),
@@ -307,7 +298,6 @@ namespace BookApplication1.Migrations
                             Description = "A historical mystery following the hunt for a forbidden ancient manuscript.",
                             EditionNum = 1,
                             ISBN = "978-1-22468-975-3",
-                            ImageURL = "",
                             Name = "The Alchemist’s Secret Grimoire",
                             Price = 560.75f,
                             PublishedDate = new DateOnly(2023, 7, 22),
@@ -324,7 +314,6 @@ namespace BookApplication1.Migrations
                             Description = "A philosophical sci-fi novel exploring the human condition through space travel.",
                             EditionNum = 4,
                             ISBN = "978-1-30987-642-2",
-                            ImageURL = "",
                             Name = "Voyage to the Edge of Nowhere",
                             Price = 480f,
                             PublishedDate = new DateOnly(2021, 9, 29),
@@ -341,7 +330,6 @@ namespace BookApplication1.Migrations
                             Description = "A chilling psychological thriller set in an abandoned hospital.",
                             EditionNum = 1,
                             ISBN = "978-0-33445-221-7",
-                            ImageURL = "",
                             Name = "The Silent Ward",
                             Price = 350f,
                             PublishedDate = new DateOnly(2022, 2, 10),
@@ -358,7 +346,6 @@ namespace BookApplication1.Migrations
                             Description = "An epic fantasy journey through a fallen kingdom full of secrets.",
                             EditionNum = 2,
                             ISBN = "978-1-44444-222-9",
-                            ImageURL = "",
                             Name = "Chronicles of the Forgotten Empire",
                             Price = 899f,
                             PublishedDate = new DateOnly(2023, 10, 4),
@@ -375,7 +362,6 @@ namespace BookApplication1.Migrations
                             Description = "A cyber-noir story exploring technology, identity, and rebellion.",
                             EditionNum = 1,
                             ISBN = "978-2-54321-111-6",
-                            ImageURL = "",
                             Name = "Fragments of the Neon Sky",
                             Price = 420f,
                             PublishedDate = new DateOnly(2024, 3, 12),
@@ -392,7 +378,6 @@ namespace BookApplication1.Migrations
                             Description = "A psychological thriller exploring the human mind.",
                             EditionNum = 1,
                             ISBN = "978-1-54321-765-4-2",
-                            ImageURL = "",
                             Name = "The Silent Observer",
                             Price = 499f,
                             PublishedDate = new DateOnly(2018, 5, 12),
@@ -409,7 +394,6 @@ namespace BookApplication1.Migrations
                             Description = "A complete guide to mastering full-stack web frameworks and tools.",
                             EditionNum = 2,
                             ISBN = "978-1-98765-123-6-1",
-                            ImageURL = "",
                             Name = "Modern Web Development",
                             Price = 899f,
                             PublishedDate = new DateOnly(2021, 3, 1),
@@ -426,7 +410,6 @@ namespace BookApplication1.Migrations
                             Description = "A journey into marine mysteries and ocean life.",
                             EditionNum = 1,
                             ISBN = "978-1-33445-667-8-9",
-                            ImageURL = "",
                             Name = "Into the Deep Blue",
                             Price = 350f,
                             PublishedDate = new DateOnly(2015, 11, 20),
@@ -443,7 +426,6 @@ namespace BookApplication1.Migrations
                             Description = "Understanding artificial intelligence in everyday life.",
                             EditionNum = 1,
                             ISBN = "978-1-22334-998-7-6",
-                            ImageURL = "",
                             Name = "AI for Everyone",
                             Price = 750f,
                             PublishedDate = new DateOnly(2022, 7, 10),
@@ -460,7 +442,6 @@ namespace BookApplication1.Migrations
                             Description = "A collection of ancient stories retold for modern readers.",
                             EditionNum = 3,
                             ISBN = "978-1-55678-224-3-4",
-                            ImageURL = "",
                             Name = "The Forgotten Tales",
                             Price = 420f,
                             PublishedDate = new DateOnly(2010, 1, 5),
@@ -477,7 +458,6 @@ namespace BookApplication1.Migrations
                             Description = "Easy and delicious recipes for everyday cooking.",
                             EditionNum = 1,
                             ISBN = "978-1-44223-556-5-3",
-                            ImageURL = "",
                             Name = "Cooking with Passion",
                             Price = 650f,
                             PublishedDate = new DateOnly(2019, 8, 18),
@@ -494,7 +474,6 @@ namespace BookApplication1.Migrations
                             Description = "A sci-fi adventure exploring distant galaxies.",
                             EditionNum = 2,
                             ISBN = "978-1-99887-332-1-8",
-                            ImageURL = "",
                             Name = "The Stars Beyond",
                             Price = 580f,
                             PublishedDate = new DateOnly(2017, 6, 9),
@@ -511,7 +490,6 @@ namespace BookApplication1.Migrations
                             Description = "A deep dive into backend development with C# and .NET Core.",
                             EditionNum = 1,
                             ISBN = "978-1-11223-456-7-4",
-                            ImageURL = "",
                             Name = "Mastering C# and .NET",
                             Price = 999f,
                             PublishedDate = new DateOnly(2023, 2, 15),
@@ -528,7 +506,6 @@ namespace BookApplication1.Migrations
                             Description = "How minimalism transforms lifestyle, productivity, and mindset.",
                             EditionNum = 1,
                             ISBN = "978-1-77889-554-3-7",
-                            ImageURL = "",
                             Name = "The Art of Minimalism",
                             Price = 320f,
                             PublishedDate = new DateOnly(2016, 9, 27),
@@ -545,7 +522,6 @@ namespace BookApplication1.Migrations
                             Description = "From Mesopotamia to Rome – a detailed historical exploration.",
                             EditionNum = 2,
                             ISBN = "978-1-66554-778-2-9",
-                            ImageURL = "",
                             Name = "History of Ancient Civilizations",
                             Price = 850f,
                             PublishedDate = new DateOnly(2012, 4, 30),

@@ -7,16 +7,26 @@ namespace BookApplication1.DataAccess.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        // DbSet<ModelName for table> Table Name in Db to be.
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // 1. Seed Categories (Expanded to cover all book types)
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Action", DisplayOrder = 1 },
-                new Category { Id = 2, Name = "Thiller", DisplayOrder = 2 },
-                new Category { Id = 3, Name = "Sci-fi", DisplayOrder = 3});
+                new Category { Id = 2, Name = "Thriller", DisplayOrder = 2 },
+                new Category { Id = 3, Name = "Sci-fi", DisplayOrder = 3 },
+                new Category { Id = 4, Name = "Fantasy", DisplayOrder = 4 },
+                new Category { Id = 5, Name = "Technology", DisplayOrder = 5 },
+                new Category { Id = 6, Name = "Nature", DisplayOrder = 6 },
+                new Category { Id = 7, Name = "History", DisplayOrder = 7 },
+                new Category { Id = 8, Name = "Cooking", DisplayOrder = 8 },
+                new Category { Id = 9, Name = "Self-Help", DisplayOrder = 9 }
+            );
 
+
+            // 2. Seed Products with CategoryId mappings
             modelBuilder.Entity<Product>().HasData(
                 new Product
                 {
@@ -31,7 +41,8 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 4,
                     ISBN = "978-1-23456-789-7",
                     CreatedAt = new DateOnly(2023, 5, 1),
-                    UpdatedAt = new DateOnly(2023, 5, 12)
+                    UpdatedAt = new DateOnly(2023, 5, 12),
+                    CategoryId = 3 // Sci-fi,
                 },
                 new Product
                 {
@@ -46,7 +57,8 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 5,
                     ISBN = "978-1-98765-432-1",
                     CreatedAt = new DateOnly(2022, 11, 1),
-                    UpdatedAt = new DateOnly(2022, 11, 20)
+                    UpdatedAt = new DateOnly(2022, 11, 20),
+                    CategoryId = 2 // Thriller
                 },
                 new Product
                 {
@@ -61,7 +73,8 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 4,
                     ISBN = "978-0-12345-678-9",
                     CreatedAt = new DateOnly(2024, 1, 1),
-                    UpdatedAt = new DateOnly(2024, 1, 10)
+                    UpdatedAt = new DateOnly(2024, 1, 10),
+                    CategoryId = 3 // Sci-fi
                 },
                 new Product
                 {
@@ -76,7 +89,8 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 5,
                     ISBN = "978-1-54321-987-6",
                     CreatedAt = new DateOnly(2021, 8, 1),
-                    UpdatedAt = new DateOnly(2021, 8, 17)
+                    UpdatedAt = new DateOnly(2021, 8, 17),
+                    CategoryId = 4 // Fantasy
                 },
                 new Product
                 {
@@ -91,7 +105,8 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 4,
                     ISBN = "978-0-24680-135-7",
                     CreatedAt = new DateOnly(2023, 3, 1),
-                    UpdatedAt = new DateOnly(2023, 3, 2)
+                    UpdatedAt = new DateOnly(2023, 3, 2),
+                    CategoryId = 3 // Sci-fi
                 },
                 new Product
                 {
@@ -106,7 +121,8 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 4,
                     ISBN = "978-1-67890-555-3",
                     CreatedAt = new DateOnly(2020, 12, 1),
-                    UpdatedAt = new DateOnly(2020, 12, 5)
+                    UpdatedAt = new DateOnly(2020, 12, 5),
+                    CategoryId = 1 // Action
                 },
                 new Product
                 {
@@ -121,7 +137,8 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 3,
                     ISBN = "978-0-11223-445-8",
                     CreatedAt = new DateOnly(2022, 4, 1),
-                    UpdatedAt = new DateOnly(2022, 4, 14)
+                    UpdatedAt = new DateOnly(2022, 4, 14),
+                    CategoryId = 2 // Thriller
                 },
                 new Product
                 {
@@ -136,7 +153,8 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 5,
                     ISBN = "978-9-87654-320-4",
                     CreatedAt = new DateOnly(2024, 2, 1),
-                    UpdatedAt = new DateOnly(2024, 2, 1)
+                    UpdatedAt = new DateOnly(2024, 2, 1),
+                    CategoryId = 3 // Sci-fi
                 },
                 new Product
                 {
@@ -151,7 +169,8 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 4,
                     ISBN = "978-1-22468-975-3",
                     CreatedAt = new DateOnly(2023, 7, 1),
-                    UpdatedAt = new DateOnly(2023, 7, 22)
+                    UpdatedAt = new DateOnly(2023, 7, 22),
+                    CategoryId = 7 // History
                 },
                 new Product
                 {
@@ -166,7 +185,8 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 5,
                     ISBN = "978-1-30987-642-2",
                     CreatedAt = new DateOnly(2021, 9, 1),
-                    UpdatedAt = new DateOnly(2021, 9, 29)
+                    UpdatedAt = new DateOnly(2021, 9, 29),
+                    CategoryId = 3 // Sci-fi
                 },
                 new Product
                 {
@@ -181,7 +201,8 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 3,
                     ISBN = "978-0-33445-221-7",
                     CreatedAt = new DateOnly(2022, 2, 1),
-                    UpdatedAt = new DateOnly(2022, 2, 10)
+                    UpdatedAt = new DateOnly(2022, 2, 10),
+                    CategoryId = 2 // Thriller
                 },
                 new Product
                 {
@@ -196,7 +217,8 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 5,
                     ISBN = "978-1-44444-222-9",
                     CreatedAt = new DateOnly(2023, 10, 1),
-                    UpdatedAt = new DateOnly(2023, 10, 4)
+                    UpdatedAt = new DateOnly(2023, 10, 4),
+                    CategoryId = 4 // Fantasy
                 },
                 new Product
                 {
@@ -211,7 +233,8 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 4,
                     ISBN = "978-2-54321-111-6",
                     CreatedAt = new DateOnly(2024, 3, 1),
-                    UpdatedAt = new DateOnly(2024, 3, 12)
+                    UpdatedAt = new DateOnly(2024, 3, 12),
+                    CategoryId = 3 // Sci-fi
                 },
                 new Product
                 {
@@ -226,9 +249,9 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 4,
                     ISBN = "978-1-54321-765-4-2",
                     CreatedAt = DateOnly.FromDateTime(DateTime.Now),
-                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now)
+                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now),
+                    CategoryId = 2 // Thriller
                 },
-
                 new Product
                 {
                     Id = 15,
@@ -242,9 +265,9 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 5,
                     ISBN = "978-1-98765-123-6-1",
                     CreatedAt = DateOnly.FromDateTime(DateTime.Now),
-                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now)
+                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now),
+                    CategoryId = 5 // Technology
                 },
-
                 new Product
                 {
                     Id = 16,
@@ -258,9 +281,9 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 3,
                     ISBN = "978-1-33445-667-8-9",
                     CreatedAt = DateOnly.FromDateTime(DateTime.Now),
-                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now)
+                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now),
+                    CategoryId = 6 // Nature
                 },
-
                 new Product
                 {
                     Id = 17,
@@ -274,9 +297,9 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 5,
                     ISBN = "978-1-22334-998-7-6",
                     CreatedAt = DateOnly.FromDateTime(DateTime.Now),
-                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now)
+                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now),
+                    CategoryId = 5 // Technology
                 },
-
                 new Product
                 {
                     Id = 18,
@@ -290,9 +313,9 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 4,
                     ISBN = "978-1-55678-224-3-4",
                     CreatedAt = DateOnly.FromDateTime(DateTime.Now),
-                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now)
+                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now),
+                    CategoryId = 4 // Fantasy (or History/Folklore)
                 },
-
                 new Product
                 {
                     Id = 19,
@@ -306,9 +329,9 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 5,
                     ISBN = "978-1-44223-556-5-3",
                     CreatedAt = DateOnly.FromDateTime(DateTime.Now),
-                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now)
+                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now),
+                    CategoryId = 8 // Cooking
                 },
-
                 new Product
                 {
                     Id = 20,
@@ -322,9 +345,9 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 4,
                     ISBN = "978-1-99887-332-1-8",
                     CreatedAt = DateOnly.FromDateTime(DateTime.Now),
-                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now)
+                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now),
+                    CategoryId = 3 // Sci-fi
                 },
-
                 new Product
                 {
                     Id = 21,
@@ -338,9 +361,9 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 5,
                     ISBN = "978-1-11223-456-7-4",
                     CreatedAt = DateOnly.FromDateTime(DateTime.Now),
-                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now)
+                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now),
+                    CategoryId = 5 // Technology
                 },
-
                 new Product
                 {
                     Id = 22,
@@ -354,9 +377,9 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 4,
                     ISBN = "978-1-77889-554-3-7",
                     CreatedAt = DateOnly.FromDateTime(DateTime.Now),
-                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now)
+                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now),
+                    CategoryId = 9 // Self-Help
                 },
-
                 new Product
                 {
                     Id = 23,
@@ -370,12 +393,11 @@ namespace BookApplication1.DataAccess.Data
                     Rating = 5,
                     ISBN = "978-1-66554-778-2-9",
                     CreatedAt = DateOnly.FromDateTime(DateTime.Now),
-                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now)
+                    UpdatedAt = DateOnly.FromDateTime(DateTime.Now),
+                    CategoryId = 7 // History
                 }
             );
 
         }
-
-
     }
 }
