@@ -20,7 +20,7 @@ namespace BookApplication1.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            List<Product> productsList = _unitOfWork.ProductRepository.GetAll().ToList();
+            List<Product> productsList = _unitOfWork.ProductRepository.GetAll(includeProperties: "Category").ToList();
             return View(productsList);
         }
 
@@ -31,7 +31,7 @@ namespace BookApplication1.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            Product productDetails = _unitOfWork.ProductRepository.Get(p => p.Id == productId);
+            Product productDetails = _unitOfWork.ProductRepository.Get(p => p.Id == productId, includeProperties: "Category");
  
             return productDetails == null ? NotFound() : View(productDetails);
         }
