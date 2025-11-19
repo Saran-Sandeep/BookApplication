@@ -4,6 +4,7 @@ using BookApplication1.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace BookApplication1.Areas.Admin.Controllers
 {
@@ -31,11 +32,8 @@ namespace BookApplication1.Areas.Admin.Controllers
                 return NotFound();
             }
             Product productDetails = _unitOfWork.ProductRepository.Get(p => p.Id == productId);
-            if (productDetails == null)
-            {
-                return NotFound();
-            }
-            return View(productDetails);
+ 
+            return productDetails == null ? NotFound() : View(productDetails);
         }
 
         [HttpGet("Admin/Product/Upsert")]
@@ -75,15 +73,16 @@ namespace BookApplication1.Areas.Admin.Controllers
                 if (formFile != null)
                 {
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(formFile.FileName);
-                    string productPath = Path.Combine(wwwRootPath, @"images\product");
+                    string productPath = Path.Combine(wwwRootPath, "images", "product");
 
-                    if(!string.IsNullOrEmpty(productVM.Product.ImageURL))
+                    if (!Directory.Exists(productPath)) Directory.CreateDirectory(productPath);
+
+                    // delete old image
+                    if (!string.IsNullOrEmpty(productVM.Product.ImageURL))
                     {
-                        var oldImagePath = Path.Combine(wwwRootPath, productVM.Product.ImageURL);
-                        if (System.IO.File.Exists(oldImagePath))
-                        {
-                            System.IO.File.Delete(oldImagePath);
-                        }
+                        var oldImg = Path.Combine(wwwRootPath, productVM.Product.ImageURL.Replace("/", "\\"));
+                        if (System.IO.File.Exists(oldImg))
+                            System.IO.File.Delete(oldImg);
                     }
 
                     using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
@@ -91,7 +90,7 @@ namespace BookApplication1.Areas.Admin.Controllers
                         formFile.CopyTo(fileStream);
                     }
 
-                    productVM.Product.ImageURL = @"images\product\" + fileName;
+                    productVM.Product.ImageURL = Path.Combine("images", "product", fileName).Replace("\\", "/");
                 }
 
                 if(productVM.Product.Id == 0)
