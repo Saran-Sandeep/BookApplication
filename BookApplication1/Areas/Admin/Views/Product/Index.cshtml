@@ -76,8 +76,8 @@
             <h2 class="text-uppercase tracking-wide mb-0">Library</h2>
             <small class="text-muted text-uppercase" style="letter-spacing: 1px;">Collection 2024</small>
         </div>
-        <a asp-controller="Product" asp-action="Create" class="btn btn-primary rounded-0 text-uppercase" style="font-size: 0.8rem;">
-            <i class="bi bi-plus-lg me-2"></i>Add Product
+        <a asp-controller="Product" asp-action="Upsert" class="btn btn-primary rounded-0 text-uppercase" style="font-size: 0.8rem;">
+            <i class="bi bi-plus-circle me-2"></i> Add Product
         </a>
     </div>
 
@@ -111,7 +111,7 @@
                 <div class="card card-lux h-100 w-100 position-relative">
 
                     <div class="admin-actions-container">
-                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@p.Id"
+                        <a asp-controller="Product" asp-action="Upsert" asp-route-productId="@p.Id"
                            class="btn btn-admin-square btn-dark text-white" title="Edit">
                             <i class="bi bi-pencil-fill" style="font-size: 12px;"></i>
                         </a>
@@ -123,17 +123,39 @@
                         </form>
                     </div>
 
-                    <div class="book-cover-placeholder">
-                        <h1 class="display-4 fw-bold opacity-25 user-select-none mb-0" style="font-family: serif;">@initials</h1>
-                        <span class="small text-uppercase fw-bold opacity-50 tracking-wide">@p.Author</span>
+                    @if (!string.IsNullOrEmpty(p.ImageURL))
+                    {
+                        <!-- REAL BOOK IMAGE -->
+                        <div class="position-relative" style="height: 240px; overflow:hidden;">
+                            <img src="@Url.Content("~/" + p.ImageURL)"
+                                 alt="@p.Name"
+                                 class="w-100 h-100 object-fit-cover" />
 
-                        @if (!inStock)
-                        {
-                            <div class="position-absolute top-50 start-50 translate-middle w-100 bg-black text-white text-center text-uppercase py-2 opacity-75" style="letter-spacing:2px; font-size: 0.8rem;">
-                                Out of Stock
-                            </div>
-                        }
-                    </div>
+
+                            @if (!inStock)
+                            {
+                                <div class="position-absolute top-50 start-50 translate-middle w-100 bg-black text-white text-center text-uppercase py-2 opacity-75" style="letter-spacing:2px; font-size: 0.8rem;">
+                                    Out of Stock
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- PLACEHOLDER -->
+                        <div class="book-cover-placeholder">
+                            <h1 class="display-4 fw-bold opacity-25 user-select-none mb-0" style="font-family: serif;">@initials</h1>
+                            <span class="small text-uppercase fw-bold opacity-50 tracking-wide">@p.Author</span>
+
+                            @if (!inStock)
+                            {
+                                <div class="position-absolute top-50 start-50 translate-middle w-100 bg-black text-white text-center text-uppercase py-2 opacity-75" style="letter-spacing:2px; font-size: 0.8rem;">
+                                    Out of Stock
+                                </div>
+                            }
+                        </div>
+                    }
+
 
                     <div class="card-body d-flex flex-column p-4">
 
