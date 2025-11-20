@@ -1,19 +1,19 @@
 ﻿a {
     text-decoration: none;
     color: inherit;
-/*    opacity: 0.8;
-    transition: opacity 0.2s;*/
+    opacity: 0.8;
+    transition: opacity 0.2s;
 }
 
-/*a:hover {
+a:hover {
     opacity: 1;
     color: inherit;
-}*/
+}
 
-/*.btn {
+.btn {
     transition: transform 0.3s;
 }
 
 .btn:hover {
     transform: translateY(-3px);
-}*/
+}
