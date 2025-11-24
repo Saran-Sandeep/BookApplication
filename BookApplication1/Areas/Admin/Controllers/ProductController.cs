@@ -1,6 +1,8 @@
 ﻿using BookApplication1.DataAccess.Repository.IRepository;
 using BookApplication1.Models.Models;
 using BookApplication1.Models.ViewModels;
+using BookApplication1.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
@@ -9,6 +11,7 @@ using static NuGet.Packaging.PackagingConstants;
 namespace BookApplication1.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
