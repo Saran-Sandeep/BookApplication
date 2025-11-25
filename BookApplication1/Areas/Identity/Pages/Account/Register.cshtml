@@ -176,10 +176,8 @@
             </div>
 
             <div class="col-md-6">
-                <div class="form-floating">
-                    <select asp-for="Input.CompanyId" asp-items="@Model.Input.CompanyList" class="form-select">
-                        <option disabled selected></option>
-                    </select>
+                <div class="form-floating d-none" id="Input_CompanyId--container">
+                    <select asp-for="Input.CompanyId" asp-items="@Model.Input.CompanyList" class="form-select"></select>
                     <label asp-for="Input.CompanyId">Select Company</label>
                 </div>
             </div>
@@ -228,4 +226,20 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        const roleSelect = document.getElementById("Input_Role");
+        const companyContainer = document.getElementById("Input_CompanyId--container");
+
+        function toggleCompanyField() {
+            if (roleSelect.value === "Company") {
+                companyContainer.classList.remove("d-none");
+            } else {
+                companyContainer.classList.add("d-none");
+            }
+        }
+
+        roleSelect.addEventListener("change", toggleCompanyField);
+
+        toggleCompanyField();
+    </script>
 }
