@@ -155,18 +155,32 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="form-floating">
                     <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Phone Number" />
                     <label asp-for="Input.PhoneNumber"></label>
                     <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                 </div>
             </div>
+        </div>
+
+        <!-- Role Section -->
+        <h5 class="fw-semibold mb-3">Role Information</h5>
+        <div class="row g-4 mb-4">
 
             <div class="col-md-6">
                 <div class="form-floating">
                     <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select"></select>
                     <label asp-for="Input.Role">Select Role</label>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <select asp-for="Input.CompanyId" asp-items="@Model.Input.CompanyList" class="form-select">
+                        <option disabled selected></option>
+                    </select>
+                    <label asp-for="Input.CompanyId">Select Company</label>
                 </div>
             </div>
         </div>
