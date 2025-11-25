@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Company>
+
+<style>
+    .action-buttons {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .action-buttons form {
+            margin: 0;
+        }
+</style>
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">Companies</h1>
+
+        <a asp-controller="Company" asp-action="Upsert"
+           class="btn btn-dark btn-md shadow-sm">
+            <i class="bi bi-plus-circle me-2"></i> Add Company
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+
+            <table class="table table-hover mb-0" style="table-layout: fixed; width: 100%;">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>City</th>
+                        <th>State</th>
+                        <th>Phone</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var obj in Model.OrderBy(c => c.Name))
+                    {
+                        <tr>
+                            <td>
+                                @obj.Name
+                                <div class="text-muted small">
+                                    @obj.StreetAddress, @obj.PostalCode
+                                </div>
+                            </td>
+
+                            <td>@obj.City</td>
+                            <td>@obj.State</td>
+                            <td>@obj.PhoneNumber</td>
+
+                            <td class="text-center">
+                                <div class="action-buttons">
+
+                                    <!-- Edit Button (matching Category) -->
+                                    <a asp-controller="Company"
+                                       asp-action="Upsert"
+                                       asp-route-companyId="@obj.Id"
+                                       class="btn btn-sm btn-primary">
+                                        <i class="bi bi-pencil-square me-1"></i> Edit
+                                    </a>
+
+                                    <!-- Delete Form (POST but looks like the Category delete button) -->
+                                    <form asp-controller="Company"
+                                          asp-action="Delete"
+                                          asp-route-id="@obj.Id"
+                                          method="post"
+                                          onsubmit="return confirm('Delete this company?');">
+                                        <button type="submit" class="btn btn-sm btn-danger text-white">
+                                            <i class="bi bi-trash me-1"></i> Delete
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
