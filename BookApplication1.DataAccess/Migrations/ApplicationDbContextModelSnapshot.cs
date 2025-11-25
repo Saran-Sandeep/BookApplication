@@ -129,108 +129,6 @@ namespace BookApplication1.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            City = "Austin",
-                            Name = "TechNova Solutions",
-                            PhoneNumber = "512-555-2488",
-                            PostalCode = "73301",
-                            State = "TX",
-                            StreetAddress = "4821 Innovation Way"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            City = "Seattle",
-                            Name = "Greenfield Logistics",
-                            PhoneNumber = "206-555-8821",
-                            PostalCode = "98101",
-                            State = "WA",
-                            StreetAddress = "1290 Harbor Drive"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            City = "Denver",
-                            Name = "Summit Financial Group",
-                            PhoneNumber = "303-555-9034",
-                            PostalCode = "80202",
-                            State = "CO",
-                            StreetAddress = "300 Market Street"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            City = "Phoenix",
-                            Name = "BrightPath Health",
-                            PhoneNumber = "480-555-7645",
-                            PostalCode = "85004",
-                            State = "AZ",
-                            StreetAddress = "950 Wellness Avenue"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            City = "San Diego",
-                            Name = "Bluewater Media",
-                            PhoneNumber = "619-555-3377",
-                            PostalCode = "92101",
-                            State = "CA",
-                            StreetAddress = "222 Oceanview Blvd"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            City = "Cleveland",
-                            Name = "NorthStar Manufacturing",
-                            PhoneNumber = "216-555-7799",
-                            PostalCode = "44114",
-                            State = "OH",
-                            StreetAddress = "784 Industrial Park Rd"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            City = "Nashville",
-                            Name = "PrimeEdge Retail",
-                            PhoneNumber = "615-555-1200",
-                            PostalCode = "37201",
-                            State = "TN",
-                            StreetAddress = "410 Commerce Street"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            City = "Chicago",
-                            Name = "MetroLine Transit Systems",
-                            PhoneNumber = "312-555-9402",
-                            PostalCode = "60601",
-                            State = "IL",
-                            StreetAddress = "515 Transit Plaza"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            City = "Portland",
-                            Name = "Evergreen Foods",
-                            PhoneNumber = "503-555-7420",
-                            PostalCode = "97201",
-                            State = "OR",
-                            StreetAddress = "6201 Harvest Lane"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            City = "New York",
-                            Name = "Skyline Software Inc.",
-                            PhoneNumber = "212-555-3344",
-                            PostalCode = "10001",
-                            State = "NY",
-                            StreetAddress = "77 Horizon Tower"
-                        });
                 });
 
             modelBuilder.Entity("BookApplication1.Models.Models.Product", b =>
@@ -903,9 +801,6 @@ namespace BookApplication1.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CompanyId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -918,8 +813,6 @@ namespace BookApplication1.Migrations
 
                     b.Property<string>("StreetAddress")
                         .HasColumnType("nvarchar(max)");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
@@ -984,15 +877,6 @@ namespace BookApplication1.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BookApplication1.Models.Models.ApplicationUser", b =>
-                {
-                    b.HasOne("BookApplication1.Models.Models.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
-
-                    b.Navigation("Company");
                 });
 #pragma warning restore 612, 618
         }
