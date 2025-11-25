@@ -403,6 +403,119 @@ namespace BookApplication1.DataAccess.Data
                 }
             );
 
+            modelBuilder.Entity<Company>().HasData(
+                new Company
+                {
+                    Id = 1,
+                    Name = "TechNova Solutions",
+                    StreetAddress = "4821 Innovation Way",
+                    City = "Austin",
+                    State = "TX",
+                    PostalCode = "73301",
+                    PhoneNumber = "512-555-2488"
+                },
+
+                new Company
+                {
+                    Id = 2,
+                    Name = "Greenfield Logistics",
+                    StreetAddress = "1290 Harbor Drive",
+                    City = "Seattle",
+                    State = "WA",
+                    PostalCode = "98101",
+                    PhoneNumber = "206-555-8821"
+                },
+
+                new Company
+                {
+                    Id = 3,
+                    Name = "Summit Financial Group",
+                    StreetAddress = "300 Market Street",
+                    City = "Denver",
+                    State = "CO",
+                    PostalCode = "80202",
+                    PhoneNumber = "303-555-9034"
+                },
+
+                new Company
+                {
+                    Id = 4,
+                    Name = "BrightPath Health",
+                    StreetAddress = "950 Wellness Avenue",
+                    City = "Phoenix",
+                    State = "AZ",
+                    PostalCode = "85004",
+                    PhoneNumber = "480-555-7645"
+                },
+
+                new Company
+                {
+                    Id = 5,
+                    Name = "Bluewater Media",
+                    StreetAddress = "222 Oceanview Blvd",
+                    City = "San Diego",
+                    State = "CA",
+                    PostalCode = "92101",
+                    PhoneNumber = "619-555-3377"
+                },
+
+                new Company
+                {
+                    Id = 6,
+                    Name = "NorthStar Manufacturing",
+                    StreetAddress = "784 Industrial Park Rd",
+                    City = "Cleveland",
+                    State = "OH",
+                    PostalCode = "44114",
+                    PhoneNumber = "216-555-7799"
+                },
+
+                new Company
+                {
+                    Id = 7,
+                    Name = "PrimeEdge Retail",
+                    StreetAddress = "410 Commerce Street",
+                    City = "Nashville",
+                    State = "TN",
+                    PostalCode = "37201",
+                    PhoneNumber = "615-555-1200"
+                },
+
+                new Company
+                {
+                    Id = 8,
+                    Name = "MetroLine Transit Systems",
+                    StreetAddress = "515 Transit Plaza",
+                    City = "Chicago",
+                    State = "IL",
+                    PostalCode = "60601",
+                    PhoneNumber = "312-555-9402"
+                },
+
+                new Company
+                {
+                    Id = 9,
+                    Name = "Evergreen Foods",
+                    StreetAddress = "6201 Harvest Lane",
+                    City = "Portland",
+                    State = "OR",
+                    PostalCode = "97201",
+                    PhoneNumber = "503-555-7420"
+                },
+
+                new Company
+                {
+                    Id = 10,
+                    Name = "Skyline Software Inc.",
+                    StreetAddress = "77 Horizon Tower",
+                    City = "New York",
+                    State = "NY",
+                    PostalCode = "10001",
+                    PhoneNumber = "212-555-3344"
+                }
+            );
+
+
         }
     }
 }
