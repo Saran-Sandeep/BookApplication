@@ -27,7 +27,10 @@ namespace BookApplication1.Areas.Customer.Controllers
             ShoppingCartVM shoppingCartVM = new()
             {
                 ShoppingCartList = shoppingCartList,
-                OrderTotal = shoppingCartList.Sum(i => i.Product.Price * i.count)
+                OrderHeader = new()
+                {
+                    OrderTotal = shoppingCartList.Sum(i => i.Product.Price * i.count)
+                }
             };
             return View(shoppingCartVM);
         }
@@ -93,33 +96,37 @@ namespace BookApplication1.Areas.Customer.Controllers
 
         public IActionResult Summary()
         {
-            // 1. Get logged-in user ID
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            // 2. Load user
-            var applicationUser = _unitOfWork.ApplicationUserRepository
+            ApplicationUser applicationUser = _unitOfWork.ApplicationUserRepository
                                     .Get(u => u.Id == userId);
-
-            // 3. Load shopping cart with products
+            
             IEnumerable<ShoppingCart> shoppingCartList =
                 _unitOfWork.ShoppingCartRepository
                     .GetAll(i => i.ApplicationUserId == userId,
                             includeProperties: "Product")
                     .ToList();
 
-            // 4. Calculate totals
-            double orderTotal = shoppingCartList.Sum(i => i.Product.Price * i.count);
+            if(applicationUser == null || shoppingCartList == null) return NotFound();
 
-            // 5. Populate ViewModel
-            OrderSummaryVM orderSummaryVM = new()
+            ShoppingCartVM shoppingCartVM = new()
             {
                 ShoppingCartList = shoppingCartList,
-                OrderTotal = orderTotal,
-                User = applicationUser
+                OrderHeader = new()
+                {
+                    ApplicationUserId = userId,
+                    OrderTotal = shoppingCartList.Sum(i => i.Product.Price * i.count),
+                    Name = applicationUser.Name,
+                    PhoneNumber = applicationUser.PhoneNumber,
+                    StreetAddress = applicationUser.StreetAddress,
+                    City = applicationUser.City,
+                    State = applicationUser.State,
+                    PostalCode = applicationUser.PostalCode
+                }
             };
 
-            return View(orderSummaryVM);
+            return View(shoppingCartVM);
         }
     }
 }
