@@ -2,6 +2,7 @@
 using BookApplication1.DataAccess.Repository.IRepository;
 using BookApplication1.Models.Models;
 using BookApplication1.Models.ViewModels;
+using BookApplication1.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,8 @@ namespace BookApplication1.Areas.Customer.Controllers
     public class ShoppingCartController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        [BindProperty]
+        public ShoppingCartVM shoppingCartVM { get; set; }
         public ShoppingCartController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -24,7 +27,8 @@ namespace BookApplication1.Areas.Customer.Controllers
             IEnumerable<ShoppingCart> shoppingCartList = _unitOfWork.ShoppingCartRepository
                 .GetAll(i => i.ApplicationUserId == userId, includeProperties: "Product")
                 .ToList();
-            ShoppingCartVM shoppingCartVM = new()
+
+            shoppingCartVM = new()
             {
                 ShoppingCartList = shoppingCartList,
                 OrderHeader = new()
@@ -101,16 +105,16 @@ namespace BookApplication1.Areas.Customer.Controllers
 
             ApplicationUser applicationUser = _unitOfWork.ApplicationUserRepository
                                     .Get(u => u.Id == userId);
-            
+
             IEnumerable<ShoppingCart> shoppingCartList =
                 _unitOfWork.ShoppingCartRepository
                     .GetAll(i => i.ApplicationUserId == userId,
                             includeProperties: "Product")
                     .ToList();
 
-            if(applicationUser == null || shoppingCartList == null) return NotFound();
+            if (applicationUser == null || shoppingCartList == null) return NotFound();
 
-            ShoppingCartVM shoppingCartVM = new()
+            shoppingCartVM = new()
             {
                 ShoppingCartList = shoppingCartList,
                 OrderHeader = new()
@@ -125,6 +129,61 @@ namespace BookApplication1.Areas.Customer.Controllers
                     PostalCode = applicationUser.PostalCode
                 }
             };
+
+            return View(shoppingCartVM);
+        }
+
+        [HttpPost, ActionName("Summary")]
+        public IActionResult SummaryPOST()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            ApplicationUser applicationUser = _unitOfWork.ApplicationUserRepository
+                                    .Get(u => u.Id == userId);
+
+            IEnumerable<ShoppingCart> shoppingCartList =
+                _unitOfWork.ShoppingCartRepository
+                    .GetAll(i => i.ApplicationUserId == userId,
+                            includeProperties: "Product")
+                    .ToList();
+
+            if (applicationUser == null || shoppingCartList == null) return NotFound();
+
+            shoppingCartVM.ShoppingCartList = shoppingCartList;
+            shoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
+            shoppingCartVM.OrderHeader.ApplicationUserId = userId;
+            shoppingCartVM.OrderHeader.ApplicationUser = applicationUser;
+            shoppingCartVM.OrderHeader.OrderTotal = shoppingCartList.Sum(i => i.Product.Price * i.count);
+
+            if (shoppingCartVM.OrderHeader.ApplicationUser.CompanyId.GetValueOrDefault() == 0)
+            {
+                //customer account, capture payment
+                shoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
+                shoppingCartVM.OrderHeader.OrderStatus = SD.StatusPending;
+            }
+            else
+            {
+                //company account
+                shoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusDelayedPayment;
+                shoppingCartVM.OrderHeader.OrderStatus = SD.StatusApproved;
+            }
+
+            _unitOfWork.OrderHeaderRepository.Add(shoppingCartVM.OrderHeader);
+            _unitOfWork.Save();
+            foreach (var cart in shoppingCartVM.ShoppingCartList)
+            {
+                OrderDetail orderDetail = new()
+                {
+                    ProductId = cart.ProductId,
+                    OrderHeaderId = shoppingCartVM.OrderHeader.Id,
+                    Price = cart.Product.Price,
+                    Count = cart.count
+                };
+
+                _unitOfWork.OrderDetailRepository.Add(orderDetail);
+                _unitOfWork.Save();
+            }
 
             return View(shoppingCartVM);
         }
