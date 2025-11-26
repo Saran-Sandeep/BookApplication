@@ -31,5 +31,45 @@ namespace BookApplication1.Areas.Customer.Controllers
             };
             return View(shoppingCartVM);
         }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Update(int id, string change)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            // Load existing cart record including Product (optional)
+            ShoppingCart cartItem = _unitOfWork.ShoppingCartRepository
+                .Get(i => i.Id == id && i.ApplicationUserId == userId);
+
+            if (cartItem == null)
+                return NotFound();
+
+            // Apply change
+            if (change == "+1")
+            {
+                cartItem.count += 1;
+            }
+            else if (change == "-1")
+            {
+                if (cartItem.count > 1)
+                {
+                    cartItem.count -= 1;
+                }
+                else
+                {
+                    // If count goes to zero, remove item entirely
+                    _unitOfWork.ShoppingCartRepository.Remove(cartItem);
+                    _unitOfWork.Save();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            _unitOfWork.ShoppingCartRepository.Update(cartItem);
+            _unitOfWork.Save();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
