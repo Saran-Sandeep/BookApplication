@@ -15,12 +15,16 @@ namespace BookApplication1.DataAccess.Repository
         public ICategoryRepository CategoryRepository { get; set; }
         public IProductRepository ProductRepository { get; set; }
         public ICompanyRepository CompanyRepository { get; set; }
+        public IShoppingCartRepository ShoppingCartRepository { get; set; }
+        public IApplicationUserRepository ApplicationUserRepository { get; set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
             CategoryRepository = new CategoryRepository(_db);
             ProductRepository = new ProductRepository(_db);
             CompanyRepository = new CompanyRepository(_db);
+            ShoppingCartRepository = new ShoppingCartRepository(_db);
+            ApplicationUserRepository = new ApplicationUserRepository(_db);
         }
         
         
