@@ -71,5 +71,24 @@ namespace BookApplication1.Areas.Customer.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Remove(int id)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var cartItem = _unitOfWork.ShoppingCartRepository
+                .Get(i => i.Id == id && i.ApplicationUserId == userId);
+
+            if (cartItem == null)
+                return NotFound();
+
+            _unitOfWork.ShoppingCartRepository.Remove(cartItem);
+            _unitOfWork.Save();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
