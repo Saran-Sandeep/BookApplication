@@ -26,9 +26,13 @@ namespace BookApplication1.DataAccess.Repository
            dbSet.Add(entity);
         }
 
-        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
         {
             IQueryable<T> query = dbSet;
+
+            if (!tracked)
+                query = dbSet.AsNoTracking();
+
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var includeProp in includeProperties

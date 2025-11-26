@@ -60,10 +60,13 @@ namespace BookApplication1.Areas.Customer.Controllers
 
             if(shoppingCartFromDB != null)
             {
+                //product already in cart - update
                 shoppingCartFromDB.count += (int)quantity;
+                _unitOfWork.ShoppingCartRepository.Update(shoppingCartFromDB);
             }
             else
             {
+                //new product - add
                 ShoppingCart shoppingCart = new()
                 {
                     ApplicationUserId = userId,
