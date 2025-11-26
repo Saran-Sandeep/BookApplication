@@ -45,7 +45,7 @@ namespace BookApplication1.DataAccess.Repository
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll(string? includeProperties = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             if (!string.IsNullOrEmpty(includeProperties))
@@ -56,6 +56,9 @@ namespace BookApplication1.DataAccess.Repository
                     query = query.Include(includeProp);
                 }
             }
+
+            if(filter != null)
+                query = query.Where(filter);
             return query.ToList();
         }
 
