@@ -1,0 +1,197 @@
+﻿@model ShoppingCartVM
+
+@{
+
+    ViewData["Title"] = "Your Cart";
+    var items = Model.ShoppingCartList;
+    var total = Model.OrderTotal;
+}
+
+<style>
+    .cart-wrapper {
+        max-width: 900px;
+        margin: 3rem auto;
+    }
+
+    .cart-card {
+        border: 1px solid #ddd;
+        border-radius: 0;
+        padding: 1.5rem;
+        background: #fff;
+        margin-bottom: 1rem;
+    }
+
+    .cart-image {
+        width: 100px;
+        height: 130px;
+        background: #f7f7f7;
+        border: 1px solid #ddd;
+        border-radius: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .cart-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .cart-initial {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #888;
+        font-family: serif;
+    }
+
+    .qty-btn {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border-radius: 0;
+        line-height: 34px;
+    }
+
+    .qty-input {
+        width: 80px;
+        text-align: center;
+        border-radius: 0;
+    }
+
+    .summary-box {
+        border: 1px solid #ddd;
+        background: #fff;
+        border-radius: 0;
+        padding: 1.5rem;
+    }
+
+    .summary-title {
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .line {
+        height: 1px;
+        background: #e5e5e5;
+        margin: 1rem 0;
+    }
+</style>
+
+
+<div class="cart-wrapper">
+
+    <h2 class="fw-bold text-uppercase mb-4">Your Shopping Cart</h2>
+
+    @if (!items.Any())
+    {
+        <div class="alert alert-info rounded-0">
+            Your cart is empty.
+            <a asp-controller="Home" asp-action="Index" class="fw-bold ms-1">Browse Books</a>
+        </div>
+    }
+    else
+    {
+        <!-- Cart Items -->
+        @foreach (var item in items)
+        {
+            <div class="cart-card">
+
+                <div class="row g-3 align-items-center">
+
+                    <!-- Book Image -->
+                    <div class="col-auto">
+                        <div class="cart-image">
+                            @if (!string.IsNullOrEmpty(item.Product.ImageURL))
+                            {
+                                <img src="@Url.Content("~/" + item.Product.ImageURL)" alt="@item.Product.Name" />
+                            }
+                            else
+                            {
+                                <div class="cart-initial">
+                                    @item.Product.Name.Substring(0, 1).ToUpper()
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Book Info -->
+                    <div class="col">
+                        <h5 class="fw-bold text-uppercase mb-1">@item.Product.Name</h5>
+                        <p class="text-muted small mb-1">by @item.Product.Author</p>
+                        <p class="mb-1 text-muted small">₹@item.Product.Price each</p>
+
+                        <div class="d-flex align-items-center gap-2">
+
+                            <!-- Update Quantity Form -->
+                            <form asp-controller="Cart" asp-action="Update" method="post" class="d-flex align-items-center gap-2">
+                                <input type="hidden" name="id" value="@item.Id" />
+
+                                <button type="submit" name="change" value="-1"
+                                        class="btn btn-outline-dark qty-btn">
+                                    −
+                                </button>
+
+                                <input type="text" name="count"
+                                       class="form-control qty-input"
+                                       value="@item.count" readonly/>
+
+                                <button type="submit" name="change" value="+1"
+                                        class="btn btn-outline-dark qty-btn">
+                                    +
+                                </button>
+                            </form>
+
+                        </div>
+                    </div>
+
+                    <!-- Total Price & Remove -->
+                    <div class="col-auto text-end">
+
+                        <div class="fw-bold mb-2">
+                            ₹@(item.Product.Price* item.count)
+                        </div>
+
+                        <form asp-controller="Cart" asp-action="Remove" method="post">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button class="btn btn-outline-danger btn-sm rounded-0">
+                                Remove
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+        <!-- Summary -->
+        <div class="summary-box mt-4">
+            <h5 class="summary-title">Order Summary</h5>
+
+            <div class="d-flex justify-content-between mb-1">
+                <span>Subtotal</span>
+                <strong>₹@total</strong>
+            </div>
+
+            <div class="d-flex justify-content-between mb-1">
+                <span>Shipping</span>
+                <strong>₹0</strong>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="d-flex justify-content-between fs-5 fw-bold">
+                <span>Total</span>
+                <span>₹@total</span>
+            </div>
+
+            <a asp-controller="Checkout" asp-action="Index"
+               class="btn btn-dark w-100 mt-3 py-2 text-uppercase fw-bold rounded-0">
+                Proceed to Checkout
+            </a>
+        </div>
+    }
+</div>
