@@ -224,7 +224,15 @@
             <span>₹@total</span>
         </div>
 
-        <form asp-controller="Checkout" asp-action="PlaceOrder" method="post" class="mt-4">
+        <form asp-controller="ShoppingCart" asp-action="Summary" method="post" class="mt-4">
+            @* Hidden fields for OrderHeader *@
+            <input type="hidden" asp-for="OrderHeader.Name" />
+            <input type="hidden" asp-for="OrderHeader.PhoneNumber" />
+            <input type="hidden" asp-for="OrderHeader.StreetAddress" />
+            <input type="hidden" asp-for="OrderHeader.City" />
+            <input type="hidden" asp-for="OrderHeader.State" />
+            <input type="hidden" asp-for="OrderHeader.PostalCode" />
+            <input type="hidden" asp-for="OrderHeader.ApplicationUserId" />
             <button type="submit"
                     class="btn btn-dark w-100 py-2 text-uppercase fw-bold rounded-0">
                 Confirm & Place Order
