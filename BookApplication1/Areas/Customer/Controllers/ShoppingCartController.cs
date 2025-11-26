@@ -86,7 +86,7 @@ namespace BookApplication1.Areas.Customer.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var cartItem = _unitOfWork.ShoppingCartRepository
+            ShoppingCart cartItem = _unitOfWork.ShoppingCartRepository
                 .Get(i => i.Id == id && i.ApplicationUserId == userId);
 
             if (cartItem == null)
@@ -98,6 +98,7 @@ namespace BookApplication1.Areas.Customer.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize]
         public IActionResult Summary()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -133,6 +134,7 @@ namespace BookApplication1.Areas.Customer.Controllers
             return View(shoppingCartVM);
         }
 
+        [Authorize]
         [HttpPost, ActionName("Summary")]
         public IActionResult SummaryPOST()
         {
@@ -149,14 +151,15 @@ namespace BookApplication1.Areas.Customer.Controllers
                     .ToList();
 
             if (applicationUser == null || shoppingCartList == null) return NotFound();
+            if (!shoppingCartList.Any())
+                return RedirectToAction("Index");
 
             shoppingCartVM.ShoppingCartList = shoppingCartList;
-            shoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
+            shoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
             shoppingCartVM.OrderHeader.ApplicationUserId = userId;
-            shoppingCartVM.OrderHeader.ApplicationUser = applicationUser;
             shoppingCartVM.OrderHeader.OrderTotal = shoppingCartList.Sum(i => i.Product.Price * i.count);
 
-            if (shoppingCartVM.OrderHeader.ApplicationUser.CompanyId.GetValueOrDefault() == 0)
+            if (applicationUser.CompanyId.GetValueOrDefault() == 0)
             {
                 //customer account, capture payment
                 shoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
@@ -182,10 +185,24 @@ namespace BookApplication1.Areas.Customer.Controllers
                 };
 
                 _unitOfWork.OrderDetailRepository.Add(orderDetail);
-                _unitOfWork.Save();
+            }
+            _unitOfWork.Save();
+
+            if (applicationUser.CompanyId.GetValueOrDefault() == 0)
+            {
+                //customer account, capture payment
+                // stripe logic #TODO
             }
 
-            return View(shoppingCartVM);
+            _unitOfWork.ShoppingCartRepository.RemoveRange(shoppingCartVM.ShoppingCartList);
+            _unitOfWork.Save();
+
+            return RedirectToAction(nameof(OrderConfirmation), new { id = shoppingCartVM.OrderHeader.Id });
+        }
+
+        public IActionResult OrderConfirmation(int id)
+        {
+            return View(id);
         }
     }
 }
