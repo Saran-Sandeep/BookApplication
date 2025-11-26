@@ -90,5 +90,36 @@ namespace BookApplication1.Areas.Customer.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult Summary()
+        {
+            // 1. Get logged-in user ID
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            // 2. Load user
+            var applicationUser = _unitOfWork.ApplicationUserRepository
+                                    .Get(u => u.Id == userId);
+
+            // 3. Load shopping cart with products
+            IEnumerable<ShoppingCart> shoppingCartList =
+                _unitOfWork.ShoppingCartRepository
+                    .GetAll(i => i.ApplicationUserId == userId,
+                            includeProperties: "Product")
+                    .ToList();
+
+            // 4. Calculate totals
+            double orderTotal = shoppingCartList.Sum(i => i.Product.Price * i.count);
+
+            // 5. Populate ViewModel
+            OrderSummaryVM orderSummaryVM = new()
+            {
+                ShoppingCartList = shoppingCartList,
+                OrderTotal = orderTotal,
+                User = applicationUser
+            };
+
+            return View(orderSummaryVM);
+        }
     }
 }
