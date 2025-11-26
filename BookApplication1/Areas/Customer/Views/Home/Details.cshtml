@@ -1,4 +1,4 @@
-﻿@model Product
+﻿@model ShoppingCart
 
 @{
     ViewData["Title"] = "Book Details";
@@ -91,25 +91,25 @@
         <div class="col-md-4">
 
             <div class="book-cover">
-                @if (!string.IsNullOrEmpty(Model.ImageURL))
+                @if (!string.IsNullOrEmpty(Model.Product.ImageURL))
                 {
-                    <img src="@Url.Content("~/" + Model.ImageURL)" alt="@Model.Name" />
+                    <img src="@Url.Content("~/" + Model.Product.ImageURL)" alt="@Model.Product.Name" />
                 }
                 else
                 {
                     <div class="book-initials">
-                        @Model.Name.Substring(0, 1).ToUpper()
+                        @Model.Product.Name.Substring(0, 1).ToUpper()
                     </div>
                 }
             </div>
 
             <!-- Stock Badge -->
             <div class="mt-3">
-                @if (Model.Quantity == 0)
+                @if (Model.Product.Quantity == 0)
                 {
                     <span class="badge bg-danger px-3 py-2">Out of Stock</span>
                 }
-                else if (Model.Quantity <= 5)
+                else if (Model.Product.Quantity <= 5)
                 {
                     <span class="badge bg-warning text-dark px-3 py-2">Low Stock</span>
                 }
@@ -125,15 +125,15 @@
         <div class="col-md-8">
             <div class="detail-card">
 
-                <h3 class="fw-bold text-uppercase mb-2">@Model.Name</h3>
-                <p class="text-muted mb-2">by @Model.Author</p>
+                <h3 class="fw-bold text-uppercase mb-2">@Model.Product.Name</h3>
+                <p class="text-muted mb-2">by @Model.Product.Author</p>
 
-                <span class="category-chip">@Model.Category.Name</span>
+                <span class="category-chip">@Model.Product.Category.Name</span>
 
                 <!-- Rating -->
                 <div class="mt-3 mb-3">
                     @{
-                        int rating = Math.Clamp(Model.Rating, 0, 5);
+                        int rating = Math.Clamp(Model.Product.Rating, 0, 5);
                         for (int i = 0; i < 5; i++)
                         {
                             <i class="bi @(i < rating ? "bi-star-fill text-warning" : "bi-star text-muted")"></i>
@@ -146,26 +146,26 @@
                 <!-- Description -->
                 <h6 class="fw-bold text-uppercase small">Description</h6>
                 <p class="text-muted" style="font-family: serif;">
-                    @Model.Description
+                    @Model.Product.Description
                 </p>
 
                 <div class="line"></div>
 
                 <!-- Table -->
                 <table class="table table-borderless small">
-                    <tr><th class="text-muted">Price</th><td>₹@Model.Price</td></tr>
-                    <tr><th class="text-muted">Published</th><td>@Model.PublishedDate.Year</td></tr>
-                    <tr><th class="text-muted">Edition</th><td>@Model.EditionNum</td></tr>
-                    <tr><th class="text-muted">ISBN</th><td>@Model.ISBN</td></tr>
-                    <tr><th class="text-muted">Quantity</th><td>@Model.Quantity</td></tr>
+                    <tr><th class="text-muted">Price</th><td>₹@Model.Product.Price</td></tr>
+                    <tr><th class="text-muted">Published</th><td>@Model.Product.PublishedDate.Year</td></tr>
+                    <tr><th class="text-muted">Edition</th><td>@Model.Product.EditionNum</td></tr>
+                    <tr><th class="text-muted">ISBN</th><td>@Model.Product.ISBN</td></tr>
+                    <tr><th class="text-muted">Quantity</th><td>@Model.Product.Quantity</td></tr>
                 </table>
 
                 <div class="line"></div>
 
                 <!-- Add to Cart Section -->
-                @if (Model.Quantity > 0)
+                @if (Model.Product.Quantity > 0)
                 {
-                    <form asp-controller="Cart" asp-action="Add" asp-route-id="@Model.Id" method="post">
+                    <form asp-controller="Home" asp-action="Details" asp-route-productId="@Model.Product.Id" method="post">
                         <div class="d-flex justify-content-between align-content-center gap-3">
 
                             <div class="d-flex align-items-center gap-2">
