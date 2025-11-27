@@ -1,4 +1,4 @@
-﻿@model List<Product>
+﻿@model IEnumerable<Product>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -122,7 +122,7 @@
             <form asp-action="Index" method="get">
                 <div class="input-group">
                     <input class="form-control rounded-0 border-secondary"
-                           name="search"
+                           name="searchQuery"
                            placeholder="SEARCH TITLE OR AUTHOR..." />
                     <button class="btn btn-dark rounded-0 px-4 text-uppercase" type="submit">Search</button>
                 </div>

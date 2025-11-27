@@ -22,9 +22,19 @@ namespace BookApplication1.Areas.Customer.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? searchQuery = null)
         {
-            List<Product> productList = _unitOfWork.ProductRepository.GetAll(includeProperties: "Category").ToList();
+            IEnumerable<Product> productList = _unitOfWork.ProductRepository
+                .GetAll(includeProperties: "Category").ToList();
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                searchQuery = searchQuery.Trim().ToLower();
+
+                productList = productList.Where(book => 
+                    book.Name.ToLower().Contains(searchQuery) || 
+                    book.Author.ToLower().Contains(searchQuery));
+            }
+
             return View(productList);
         }
 
