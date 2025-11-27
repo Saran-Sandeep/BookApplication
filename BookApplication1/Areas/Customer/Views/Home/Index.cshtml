@@ -224,7 +224,7 @@
 
                             <form asp-controller="Cart" asp-action="Add" asp-route-id="@p.Id" method="post">
                                 <button type="submit"
-                                        class="btn btn-sm @(inStock ? "btn-outline-dark" : "btn-outline-secondary disabled") rounded-0 text-uppercase fw-bold px-3">
+                                        class="btn btn-sm @(inStock ? "btn-outline-dark" : "btn-outline disabled") rounded-0 text-uppercase fw-bold px-3">
                                     @(inStock ? "Add To Cart" : "Sold")
                                 </button>
                             </form>
