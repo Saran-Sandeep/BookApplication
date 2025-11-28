@@ -23,6 +23,33 @@ namespace BookApplication1.DataAccess.Repository
         {
             _db.OrderHeaders.Update(orderHeader);
         }
+
+        public void UpdateRazorPayPaymentID(int id, string sessionId, string paymentIntentID)
+        {
+            OrderHeader? orderHeaderFromDB = _db.OrderHeaders.FirstOrDefault(u => u.Id == id);
+            if (orderHeaderFromDB != null)
+            {
+                if (!String.IsNullOrEmpty(sessionId))
+                    orderHeaderFromDB.SessionId = sessionId;
+                if (!String.IsNullOrEmpty(paymentIntentID))
+                {
+                    orderHeaderFromDB.PaymentIntentId = paymentIntentID;
+                    orderHeaderFromDB.PaymentDate = DateTime.Now;
+                }
+            }
+        }
+
+        public void UpdateStatus(int id, string orderStatus, string? paymentStatus = null)
+        {
+            OrderHeader? orderHeaderFromDB = _db.OrderHeaders.FirstOrDefault(u => u.Id == id);
+            if (orderHeaderFromDB != null)
+            {
+                orderHeaderFromDB.OrderStatus = orderStatus;
+                if(!String.IsNullOrEmpty(paymentStatus))
+                    orderHeaderFromDB.PaymentStatus = paymentStatus;
+            }
+
+        }
     }
 
 }
