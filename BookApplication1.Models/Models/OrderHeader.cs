@@ -29,8 +29,10 @@ namespace BookApplication1.Models.Models
         public DateTime PaymentDate { get; set; }
         public DateOnly PaymentDueDate { get; set; }
 
-        public string? SessionId { get; set; }
-        public string? PaymentIntentId { get; set; }
+        // Razorpay fields
+        public string? RazorpayOrderId { get; set; }
+        public string? RazorpayPaymentId { get; set; }
+        public string? RazorpaySignature { get; set; }
 
         [Required]
         public string PhoneNumber { get; set; }
