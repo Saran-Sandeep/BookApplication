@@ -12,8 +12,8 @@ namespace BookApplication1.DataAccess.Repository
 {
     public class OrderHeaderRepository : Repository<OrderHeader>, IOrderHeaderRepository
     {
-
         private ApplicationDbContext _db;
+
         public OrderHeaderRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
@@ -24,17 +24,31 @@ namespace BookApplication1.DataAccess.Repository
             _db.OrderHeaders.Update(orderHeader);
         }
 
-        public void UpdateRazorPayPaymentID(int id, string sessionId, string paymentIntentID)
+        public void UpdateRazorpayOrderId(int orderId, string razorpayOrderId)
         {
-            OrderHeader? orderHeaderFromDB = _db.OrderHeaders.FirstOrDefault(u => u.Id == id);
-            if (orderHeaderFromDB != null)
+            OrderHeader? orderHeader = _db.OrderHeaders.FirstOrDefault(o => o.Id == orderId);
+
+            if (orderHeader != null && !string.IsNullOrEmpty(razorpayOrderId))
             {
-                if (!String.IsNullOrEmpty(sessionId))
-                    orderHeaderFromDB.SessionId = sessionId;
-                if (!String.IsNullOrEmpty(paymentIntentID))
+                orderHeader.RazorpayOrderId = razorpayOrderId;
+            }
+        }
+
+        public void UpdateRazorpayPaymentInfo(int orderId, string paymentId, string signature)
+        {
+            OrderHeader? orderHeader = _db.OrderHeaders.FirstOrDefault(o => o.Id == orderId);
+
+            if (orderHeader != null)
+            {
+                if (!string.IsNullOrEmpty(paymentId))
                 {
-                    orderHeaderFromDB.PaymentIntentId = paymentIntentID;
-                    orderHeaderFromDB.PaymentDate = DateTime.Now;
+                    orderHeader.RazorpayPaymentId = paymentId;
+                    orderHeader.PaymentDate = DateTime.Now;
+                }
+
+                if (!string.IsNullOrEmpty(signature))
+                {
+                    orderHeader.RazorpaySignature = signature;
                 }
             }
         }
@@ -45,11 +59,11 @@ namespace BookApplication1.DataAccess.Repository
             if (orderHeaderFromDB != null)
             {
                 orderHeaderFromDB.OrderStatus = orderStatus;
-                if(!String.IsNullOrEmpty(paymentStatus))
+                if (!String.IsNullOrEmpty(paymentStatus))
                     orderHeaderFromDB.PaymentStatus = paymentStatus;
             }
-
         }
     }
+
 
 }
