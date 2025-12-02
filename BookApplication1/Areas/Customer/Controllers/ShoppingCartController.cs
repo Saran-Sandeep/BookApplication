@@ -5,6 +5,8 @@ using BookApplication1.Models.ViewModels;
 using BookApplication1.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Razorpay.Api;
 
 namespace BookApplication1.Areas.Customer.Controllers
 {
@@ -14,9 +16,11 @@ namespace BookApplication1.Areas.Customer.Controllers
         private readonly IUnitOfWork _unitOfWork;
         [BindProperty]
         public ShoppingCartVM shoppingCartVM { get; set; }
-        public ShoppingCartController(IUnitOfWork unitOfWork)
+        private readonly RazorpaySettings _razorpaySettings;
+        public ShoppingCartController(IUnitOfWork unitOfWork, IOptions<RazorpaySettings> options)
         {
             _unitOfWork = unitOfWork;
+            _razorpaySettings = options.Value;
         }
 
         [Authorize]
@@ -191,7 +195,38 @@ namespace BookApplication1.Areas.Customer.Controllers
             if (applicationUser.CompanyId.GetValueOrDefault() == 0)
             {
                 //customer account, capture payment
-                // stripe logic #TODO
+                // razorpay logic
+                int amountInPaise = (int)(shoppingCartVM.OrderHeader.OrderTotal * 100);
+
+                RazorpayClient client = new(
+                    _razorpaySettings.Key,
+                    _razorpaySettings.Secret
+                    );
+
+                if (string.IsNullOrEmpty(_razorpaySettings.Key) || string.IsNullOrEmpty(_razorpaySettings.Secret))
+                {
+                    throw new Exception("Razorpay Key or Secret is not configured!");
+                }
+
+
+                Dictionary<string, object> options = new()
+                {
+                    { "amount", amountInPaise},
+                    { "currency", "INR"},
+                    { "receipt", shoppingCartVM.OrderHeader.Id.ToString() },
+                    //{ "payment_capture", 1 }
+                };
+
+
+                Order razorOrder = client.Order.Create(options);
+
+                //Store the Razorpay Order Id in database
+                shoppingCartVM.OrderHeader.RazorpayOrderId = razorOrder["id"].ToString();
+                _unitOfWork.Save();
+
+                ViewBag.orderId = razorOrder["id"].ToString();
+
+                return RedirectToAction("RazorCheckout", new { orderId = shoppingCartVM.OrderHeader.RazorpayOrderId });
             }
 
             _unitOfWork.ShoppingCartRepository.RemoveRange(shoppingCartVM.ShoppingCartList);
@@ -199,6 +234,21 @@ namespace BookApplication1.Areas.Customer.Controllers
 
             return RedirectToAction(nameof(OrderConfirmation), new { id = shoppingCartVM.OrderHeader.Id });
         }
+
+        public IActionResult RazorCheckout(int orderId)
+        {
+            OrderHeader? order = _unitOfWork.OrderHeaderRepository.Get(o => o.Id == orderId);
+            if (order == null)
+                return NotFound();
+
+            ViewBag.OrderId = order.RazorpayOrderId;
+            ViewBag.Amount = (int)(order.OrderTotal * 100); // in paise
+            ViewBag.Key = _razorpaySettings.Key;
+            ViewBag.OrderHeaderId = order.Id; // so we know which order to update later
+
+            return View();
+        }
+
 
         public IActionResult OrderConfirmation(int id)
         {
