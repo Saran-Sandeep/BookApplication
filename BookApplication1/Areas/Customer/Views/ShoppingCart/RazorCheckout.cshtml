@@ -1,0 +1,43 @@
+﻿@{
+    var orderId = ViewBag.OrderId;
+    var amount = ViewBag.Amount;
+    var key = ViewBag.Key;
+    var orderHeaderId = ViewBag.OrderHeaderId;
+}
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<form method="post" asp-action="PaymentConfirmation" asp-controller="ShoppingCart" asp-area="Customer">
+    <input type="hidden" name="OrderHeaderId" value="@orderHeaderId" />
+    <input type="hidden" name="razorpay_order_id" id="razorpay_order_id" />
+    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" />
+    <input type="hidden" name="razorpay_signature" id="razorpay_signature" />
+
+    <button id="rzp-button">Pay Now</button>
+</form>
+
+<script>
+    var options = {
+        "key": "@key",
+        "amount": "@amount",
+        "currency": "INR",
+        "name": "Book Store",
+        "description": "Order Payment",
+        "order_id": "@orderId",
+        "handler": function (response){
+            // Set hidden inputs
+            document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+            document.getElementById('razorpay_signature').value = response.razorpay_signature;
+
+            // Submit the form
+            document.forms[0].submit();
+        }
+    };
+
+    var rzp = new Razorpay(options);
+    document.getElementById('rzp-button').onclick = function(e){
+        rzp.open();
+        e.preventDefault();
+    };
+</script>
