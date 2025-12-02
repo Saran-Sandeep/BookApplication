@@ -1,10 +1,11 @@
 using BookApplication1.DataAccess.Data;
 using BookApplication1.DataAccess.Repository;
 using BookApplication1.DataAccess.Repository.IRepository;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using BookApplication1.Utility;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
-builder.Services.Configure<RazorPaySettings>(builder.Configuration.GetSection("RazorPay"));
+builder.Services.Configure<RazorpaySettings>(builder.Configuration.GetSection("Razorpay"));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 

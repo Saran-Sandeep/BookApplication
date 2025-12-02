@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BookApplication1.Utility
 {
-    public class RazorPaySettings
+    public class RazorpaySettings
     {
-        public string SecretKey { get; set; } = null!;
-        public string PublishableKey { get; set; } = null!;
+        public string Key { get; set; } = null!;
+        public string Secret { get; set; } = null!;
     }
 }
