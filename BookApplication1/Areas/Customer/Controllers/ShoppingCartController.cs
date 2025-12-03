@@ -52,7 +52,7 @@ namespace BookApplication1.Areas.Customer.Controllers
 
             // Load existing cart record including Product (optional)
             ShoppingCart cartItem = _unitOfWork.ShoppingCartRepository
-                .Get(i => i.Id == id && i.ApplicationUserId == userId);
+                .Get(i => i.Id == id && i.ApplicationUserId == userId, tracked: true);
 
             if (cartItem == null)
                 return NotFound();
@@ -70,6 +70,12 @@ namespace BookApplication1.Areas.Customer.Controllers
                 }
                 else
                 {
+                    // update cart count in session storage
+                    var count = _unitOfWork.ShoppingCartRepository
+                           .GetAll(i => i.ApplicationUserId == userId)
+                           .Count();
+                    HttpContext.Session.SetInt32(SD.SessionCart, count - 1);
+
                     // If count goes to zero, remove item entirely
                     _unitOfWork.ShoppingCartRepository.Remove(cartItem);
                     _unitOfWork.Save();
@@ -91,10 +97,16 @@ namespace BookApplication1.Areas.Customer.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             ShoppingCart cartItem = _unitOfWork.ShoppingCartRepository
-                .Get(i => i.Id == id && i.ApplicationUserId == userId);
+                .Get(i => i.Id == id && i.ApplicationUserId == userId, tracked: true);
 
             if (cartItem == null)
                 return NotFound();
+
+            // update cart count in session storage
+            var count = _unitOfWork.ShoppingCartRepository
+                   .GetAll(i => i.ApplicationUserId == userId)
+                   .Count();
+            HttpContext.Session.SetInt32(SD.SessionCart, count - 1);
 
             _unitOfWork.ShoppingCartRepository.Remove(cartItem);
             _unitOfWork.Save();
